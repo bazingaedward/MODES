@@ -7,32 +7,34 @@ from HTMLParser import HTMLParser
 import urllib
 from command import Argument, Settings
 
+
 class parser(HTMLParser):
     """parser类：过滤网页中的POMMA数据文件名"""
 
     def __init__(self):
         HTMLParser.__init__(self)
-        self.urls = []#将获取到的POMMA数据名称保存在urls中
+        self.urls = []  # 将获取到的POMMA数据名称保存在urls中
 
-    def handle_starttag(self,tag,attrs):
+    def handle_starttag(self, tag, attrs):
         pass
 
-    def handle_data(self,data):
-        #设置过滤条件，POMMA的数据开头三个字母为mac
-        if data[0:3]=='mac':
+    def handle_data(self, data):
+        # 设置过滤条件，POMMA的数据开头三个字母为mac
+        if data[0:3] == 'mac':
             self.urls.append(data)
 
-    def handle_endtag(self,tag):
+    def handle_endtag(self, tag):
         pass
+
 
 class POMMA(Argument, Settings):
     """POMMA数据下载"""
-    storePath = '.'#默认解析文件保存在当前目录
+    storePath = '.'  # 默认解析文件保存在当前目录
 
     # 命令行参数,参考 https://docs.python.org/2/howto/argparse.html
     command_args = [
-        [('url',), {'help': u'文件目录的URL地址', 'type':str,'nargs':1}],
-        [('-o',), {'help': u'输出的文件路径', 'type': str, 'nargs':1}],
+        [('url',), {'help': u'文件目录的URL地址', 'type': str, 'nargs': 1}],
+        [('-o',), {'help': u'输出的文件路径', 'type': str, 'nargs': 1}],
     ]
 
     def __init__(self):
@@ -46,21 +48,21 @@ class POMMA(Argument, Settings):
         if self.args.o:
             self.storePath = self.args.o[0]
 
-        #解析url
+        # 解析url
         self.parser = parser()
         self.parser.feed(urllib.urlopen(url).read())
 
-        #判断结果
+        # 判断结果
         if self.parser.urls:
-            #dirPath:url的上层地址
+            # dirPath:url的上层地址
             dirPath = os.path.dirname(url)
-            #dataURL:最终的POMMA下载根目录（POMMA存放文件路径与tomcat前台显示路径不同）
-            dataURL = dirPath.replace('catalog','fileServer')
+            # dataURL:最终的POMMA下载根目录（POMMA存放文件路径与tomcat前台显示路径不同）
+            dataURL = dirPath.replace('catalog', 'fileServer')
 
-            outfile = os.path.join(self.storePath,'catalog.txt')
-            with open(outfile,'w') as f:
+            outfile = os.path.join(self.storePath, 'catalog.txt')
+            with open(outfile, 'w') as f:
                 for item in self.parser.urls:
-                    f.write(os.path.join(dataURL,item)+'\n')
+                    f.write(os.path.join(dataURL, item) + '\n')
             self.parser.close()
             f.close()
         else:

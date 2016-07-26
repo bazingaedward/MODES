@@ -47,7 +47,9 @@ class Settings(object):
         try:
             ret = getfn(section, option)
         except Exception, e:
-            print(u'**警告** 从{}中读取配置[{}]失败! 原因:{}'.format(self.__config_file, '/'.join([section, option]), e.message))
+            print(u'**警告** 从{}中读取配置[{}]失败! 原因:{}'
+                  .format(self.__config_file, '/'
+                          .join([section, option]), e.message))
 
         return ret
 
@@ -58,4 +60,6 @@ class Settings(object):
             self.__config.set(section, option, value)
             self.__config.write(open(self.__config_file, 'wb'))
         except Exception, e:
-            print(u'**警告** 向{}中写入配置[{}]失败! 原因:{}'.format(self.__config_file, '/'.join([section, option]), e.message))
+            print(u'**警告** 向{}中写入配置[{}]失败! 原因:{}'
+                  .format(self.__config_file, '/'
+                          .join([section, option]), e.message))
