@@ -7,9 +7,6 @@ import numpy as np
 import netCDF4
 import datetime
 
-TEST_DATA_FNAME = '/home/e-neo/Downloads/hgt.mon.mean.nc'
-TEST_U_DATA_FNAME = '/home/e-neo/Downloads/uwnd.mon.mean.nc'
-
 
 def area_index(hgt_dataset, datetime_data):
     """面积指数
