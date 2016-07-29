@@ -207,6 +207,7 @@ class WPSHI(Argument, Settings):
         self.process()
 
     def process(self):
+        # 如果读入的年月超出数据中最新的年月便启动预测模块
         hgt_dataset = netCDF4.Dataset(self.parameters['hgt'], 'r')
         uwnd_dataset = netCDF4.Dataset(self.parameters['uwnd'], 'r')
         datetime_data = datetime.date(self.parameters['y'],
