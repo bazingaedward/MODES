@@ -63,6 +63,7 @@ class POMMA(Argument, Settings):
             with open(outfile, 'w') as f:
                 for item in self.parser.urls:
                     f.write(os.path.join(dataURL, item) + '\n')
+
             self.parser.close()
             f.close()
         else:
