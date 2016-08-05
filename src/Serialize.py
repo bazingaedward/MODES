@@ -22,7 +22,7 @@ class Serialization(Argument, Settings):
         [('-pre',), {'help': u'概率预测文件路径', 'type': str, 'nargs': 1}],
         [('-obs',), {'help': u'观测文件路径', 'type': str, 'nargs': 1}],
         [('-o',), {'help': u'结果文件保存路径', 'type': str, 'nargs': 1}],
-        [('-name',), {'help': u'结果文件名', 'type': str, 'nargs': 1}]
+        [('-n','--name',), {'help': u'结果文件名', 'type': str, 'nargs': 1}]
     ]
 
     # 序列化导出数据表单,每条记录针对格点数据

@@ -7,7 +7,6 @@ from HTMLParser import HTMLParser
 import urllib
 from command import Argument, Settings
 
-
 class parser(HTMLParser):
     """parser类：过滤网页中的POMMA数据文件名"""
 
