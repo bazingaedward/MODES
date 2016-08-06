@@ -5,17 +5,13 @@ from sys import exit
 from command import Argument, Settings
 import os
 import pandas as pd
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 from sklearn import metrics
 import tempfile as tf
-# mpl.use('Agg')
-
 
 class ROC(Argument, Settings):
     """ROC绘图"""
     parameters = dict()
-    storePath = '.'
     n_classes = 3
     # 命令行参数,参考 https://docs.python.org/2/howto/argparse.html
     command_args = [
@@ -58,13 +54,20 @@ class ROC(Argument, Settings):
         roc_auc = dict() #ROC AREA UNDER CURVE
         # turn off the interactive mode
         plt.clf()
+        total = 0
+        one = 0
+        for item in self.y_true.ix[:, self.parameters['index']]:
+            if item == 0.0:
+                one +=1
+            total +=1
+        print(one,total)
         fpr[self.parameters['index']], tpr[self.parameters['index']], _ = metrics.roc_curve(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
         roc_auc[self.parameters['index']] = metrics.roc_auc_score(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
         if self.args.verbose:
             print("====False Positive Ratio(fpr) And True Positive Ratio(tpr) Pair====")
             for idx,val in enumerate(fpr[self.parameters['index']]):
                 print(idx,val,fpr[self.parameters['index']][idx])
-        plt.plot(fpr[self.parameters['index']], tpr[self.parameters['index']],label='ROC curve (area = %0.2f)' % roc_auc[self.parameters['index']])
+        plt.plot(fpr[self.parameters['index']], tpr[self.parameters['index']],label='ex_num:%d,area: %0.2f' %(self.y_true.shape[0], roc_auc[self.parameters['index']]))
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlim([0.0, 1.05])
         plt.ylim([0.0, 1.05])
