@@ -52,6 +52,7 @@ class ROC(Argument, Settings):
         fpr = dict()  # False Positive Rate
         tpr = dict()  # True Positive Rate
         roc_auc = dict() #ROC AREA UNDER CURVE
+        bs = dict() #Brier Score Loss
         # turn off the interactive mode
         plt.clf()
         total = 0
@@ -63,11 +64,14 @@ class ROC(Argument, Settings):
         print(one,total)
         fpr[self.parameters['index']], tpr[self.parameters['index']], _ = metrics.roc_curve(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
         roc_auc[self.parameters['index']] = metrics.roc_auc_score(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
+        bs[self.parameters['index']] = metrics.brier_score_loss(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
+
         if self.args.verbose:
             print("====False Positive Ratio(fpr) And True Positive Ratio(tpr) Pair====")
             for idx,val in enumerate(fpr[self.parameters['index']]):
                 print(idx,val,fpr[self.parameters['index']][idx])
-        plt.plot(fpr[self.parameters['index']], tpr[self.parameters['index']],label='ex_num:%d,area: %0.2f' %(self.y_true.shape[0], roc_auc[self.parameters['index']]))
+        plt.plot(fpr[self.parameters['index']], tpr[self.parameters['index']],label='Num:%d,AUC: %0.2f,BS: %0.2f' \
+                %(self.y_true.shape[0], roc_auc[self.parameters['index']],bs[self.parameters['index']]))
         plt.plot([0, 1], [0, 1], 'k--')
         plt.xlim([0.0, 1.05])
         plt.ylim([0.0, 1.05])
@@ -75,7 +79,7 @@ class ROC(Argument, Settings):
         plt.ylabel('True Positive Rate')
         plt.title(self.args.title[0] if self.args.title else 'Receiver Operating Characteristic(ROC)')
         plt.legend(loc="lower right")
-        print('saving image to {}'.format(self.parameters['name']))
+        print('Saving image to {}'.format(self.parameters['name']))
         plt.savefig(self.parameters['name'])
         print('Completely Finshed.')
 
