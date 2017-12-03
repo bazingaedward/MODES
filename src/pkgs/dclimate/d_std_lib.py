@@ -494,7 +494,7 @@ def DrawMapMain_XML_CFG(dict1,Region,Levfile='',Title='',imgfile='out.png', \
     #############################################################
     #绘制站点信息
     import dclimate as dclim
-    cnfont = dclim.GetCnFont2(11)
+    # cnfont = dclim.GetCnFont2(11)
 
     StationInfoFile = dict1['StationInfoFile']
 
@@ -507,7 +507,7 @@ def DrawMapMain_XML_CFG(dict1,Region,Levfile='',Title='',imgfile='out.png', \
         m.plot(xsm,ysm,'o',markersize=3,markeredgewidth=0.01)
         for ii in range(len(staname)):
             str1 = unicode(staname[ii],'gbk')
-            plt.text(xsm2[ii],ysm2[ii],str1,fontsize=7,fontproperties=cnfont)
+            plt.text(xsm2[ii],ysm2[ii],str1,fontsize=7)
     #绘制站点信息
     ###############################################################
 
@@ -542,8 +542,8 @@ def DrawMapMain_XML_CFG(dict1,Region,Levfile='',Title='',imgfile='out.png', \
 
     #m.plot(x,y,'o',markeredgewidth=0.1)
     import dclimate as dclim
-    cnfont = dclim.GetCnFont2(12)
-    plt.title(Title.decode('gb2312'),fontproperties=cnfont)
+    # cnfont = dclim.GetCnFont2(12)
+    # plt.title(Title.decode('gb2312'))
 
 
     print('shpfile_border=',shpfile_border)
@@ -613,6 +613,7 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
 
     INITDIR = dict1['INITDIR']
     shpfile1=dict1['RegionShapeFile']
+    print(shpfile1)
     shpfile1 = shpfile1.replace('${INITDIR}',INITDIR)
 
 
@@ -679,7 +680,7 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
 
     mytic()
     if (0==cluster_num):
-        zi,xi,yi,x1,y1,nx,ny=dgrid.extened_grid(zi,x1,y1,zoom=int(2)) #
+        zi,xi,yi,x1,y1,nx,ny=dgrid.extened_grid(zi,x1,y1,zoom=int(2))
         zi.round()
     mytoc('扩展矩阵插值: ')
     #sys.exit(0)
@@ -829,7 +830,7 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
     #############################################################
     #绘制站点信息
     import dclimate as dclim
-    cnfont = dclim.GetCnFont()
+    # cnfont = dclim.GetCnFont()
 
     StationInfoFile = dict1['StationInfoFile']
     if(os.path.isfile(StationInfoFile)):
@@ -840,7 +841,7 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
         m.plot(xsm,ysm,'o',markersize=1,markeredgewidth=0.01)
         for ii in range(len(staname)):
             str1 = unicode(staname[ii],'gbk')
-            plt.text(xsm2[ii],ysm2[ii],str1,fontsize=6,fontproperties=cnfont)
+            plt.text(xsm2[ii],ysm2[ii],str1,fontsize=6)#,fontproperties=cnfont
         #绘制站点信息
     ###############################################################
 
@@ -856,7 +857,7 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
         #plt.plot(x,y,'o')
         #x2,y2 = m(x-0.3,x+0.04)
         #--  m.scatter(x,y,c=z,s=4,lw=0)
-        cnfont = dclim.GetCnFont2(size1=8)
+        # cnfont = dclim.GetCnFont2(size1=8)
         for i in range(len(x)):
             #zc2 为 插值后的实况值
             #print(x[i],y[i],z[i])
@@ -873,8 +874,8 @@ def DrawMapMain_XML_CFG_Split_Cluster(dict1,Region,Levfile='',Title='',imgfile='
 
     #m.plot(x,y,'o',markeredgewidth=0.1)
     import dclimate as dclim
-    cnfont = dclim.GetCnFont2(12)
-    plt.title(Title.decode('gb2312'),fontproperties=cnfont)
+    # cnfont = dclim.GetCnFont2(12)
+    plt.title(Title.decode('gb2312'))# ,fontproperties=cnfont)
     #plt.title(Title,size=12)
 
 
@@ -1301,23 +1302,25 @@ def draw_Region_Map(sky_region_config,RegionID,RegionDat,Levfile='maplev_RAP.lev
     SKYCLIM1_HOME = os.environ.get('SKYCLIM1_HOME')
 
     #sky_region_config = os.path.join(SKYCLIM1_HOME,'config','sky_region_config.xml')
-    tmp_config =  os.path.join(SKYCLIM1_HOME,'tmp','sky_reg_tmp.xml')
+    tmp_config =  os.path.join('..','tmp','sky_reg_tmp.xml')
 
     replaceXmlEncoding(sky_region_config,tmp_config)
     #dict2 = d_std_lib.get_RegionID_by_XML('2.xml',u'湖北省76站ccccc')
     #dict2 = d_std_lib.get_RegionID_by_XML('2.xml',u'湖北省76站01')
 
     dict2 = get_RegionID_by_XML(tmp_config,RegionID.decode('gb2312'))
+    print(dict2)
     sRegionID = dict2['RegionID']
     #print(sRegionID)
     #print(dict2)
     #file1 = os.path.join('tmp',  RegionID+'.png' )
-    dict2['INITDIR']=SKYCLIM1_HOME
+    dict2['INITDIR']='/Users/qiukaixiang/PycharmProjects/MODES/MODES'
     #用于替换初始化目录
 
     #print('*'*79)
     #print(dict2)
     #sys.exit(0)
+    print(dict2)
     DrawMapMain_XML_CFG(dict2,RegionDat,Levfile=Levfile,Title=Title,imgfile=imgfile2, \
                                   bShowImage=bShowImage1,bDrawNumber=bDrawNumber1,bDrawPoint=bDrawPoint1)#,Title='重庆夏季降水距平百分率例子')
 
@@ -1342,7 +1345,7 @@ def draw_image3(Region,Title1,LevFile1,OutPicFile1):
     #dict2 = d_std_lib.get_RegionID_by_XML('2.xml',u'湖北省76站ccccc')
     #dict2 = d_std_lib.get_RegionID_by_XML('2.xml',u'湖北省76站01')
 
-    import dict4ini
+    from pkgs.dclimate import dict4ini
     #config2 = ConfigObj(RegionID_File,encoding= "cp936")
     config2=dict4ini.DictIni(RegionID_File,commentdelimeter=';')
 

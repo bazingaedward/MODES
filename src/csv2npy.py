@@ -62,6 +62,7 @@ class csv2npy(Argument, Settings):
 
         self.auc = np.zeros([self.lats,self.lons])
         self.bs = np.zeros([self.lats,self.lons])
+        self.sum = np.zeros([self.lats,self.lons])
 
         ##loop for reshape data
         for lat in np.arange(self.lats):
@@ -70,20 +71,26 @@ class csv2npy(Argument, Settings):
                     print('Now Calculating Grid({},{})......'.format(lat,lon))
                 y_true = list()
                 y_score = list()
-                rowIdx = lat*self.lons+lon
                 for path in files:
-                    row = pd.DataFrame.from_csv(path).iloc[rowIdx]
-                    y_true.append(row['obs_'+self.nclass[self.parameters['index']]])
-                    y_score.append(row['pre_'+self.nclass[self.parameters['index']]])
+                    row = pd.DataFrame.from_csv(path).query('latitude=={} and longitude=={}'.format(lat,lon))
+                    if row.empty:
+                        continue
+                    y_true.append(row.iloc[0]['obs_'+self.nclass[self.parameters['index']]])
+                    y_score.append(row.iloc[0]['pre_'+self.nclass[self.parameters['index']]])
 
                 ##校验y_true结果,如果全是0则跳过后面的计算
-                if all(i == 0 for i in y_true):
-                    print('Warning:Grid({},{} y_true has only one class(0 or 1))'.format(lat,lon))
+                if not y_true:
+                    print('Warning: y_true is empty in Grid({},{}).'.format(lat,lon))
+                    continue
+
+                if all(i==0 for i in y_true):
+                    print('Warning:Grid({},{}) y_true has only one class(0 or 1)'.format(lat,lon))
                     continue
 
                 ##计算auc,bs
                 self.auc[lat,lon] = metrics.roc_auc_score(y_true,y_score)
                 self.bs[lat,lon] = metrics.brier_score_loss(y_true,y_score)
+                self.sum[lat,lon] = len(y_true)
                 print(self.auc[lat,lon],self.bs[lat,lon])
                 del(y_true)
                 del(y_score)
@@ -91,6 +98,7 @@ class csv2npy(Argument, Settings):
         ##save result
         np.save(self.parameters['name']+'_auc',self.auc)
         np.save(self.parameters['name']+'_bs',self.bs)
+        np.save(self.parameters['name']+'_sum',self.sum)
 
 
 if __name__ == '__main__':

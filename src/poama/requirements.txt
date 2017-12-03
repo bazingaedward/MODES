@@ -1,0 +1,4 @@
+configParser == 3.5.0
+argparse == 1.4.0
+HTMLParser == 0.0.2
+urllib3 == 1.20

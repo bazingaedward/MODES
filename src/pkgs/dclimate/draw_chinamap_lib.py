@@ -131,18 +131,18 @@ def Draw_China_Split(filename,title1,b_show_ss=0,levfile='',b_showimg=0,imgfile=
 #    m.maskoceans()
     m.drawmapboundary()
     
-    mytic()
-    dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"china_province"))
-    mytoc(u'画省界')
-
-    mytic()
-    dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"huanghe_ganliu"),color='b',linewidth=1.0)
-    mytoc(u'画黄河干流: ')
-
-    mytic()
-    dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"CJ_LVL1_RIVER"),color='b',linewidth=1.0)
-    mytoc(u'画长江干流: ')
-    mytic()
+    # mytic()
+    # dgrid.draw_map_lines(m,'spatialdat/CJ_BOUND.shp')#os.path.join(Spatial_Data,"china_province")
+    # mytoc(u'画省界')
+    #
+    # mytic()
+    # dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"huanghe_ganliu"),color='b',linewidth=1.0)
+    # mytoc(u'画黄河干流: ')
+    #
+    # mytic()
+    # dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"CJ_LVL1_RIVER"),color='b',linewidth=1.0)
+    # mytoc(u'画长江干流: ')
+    # mytic()
 
     #mytic()
     #dgrid.draw_map_lines(m,r"spatialdat\CJ_BOUND",color='k',linewidth=1.0)
@@ -222,7 +222,7 @@ def Draw_China_Split(filename,title1,b_show_ss=0,levfile='',b_showimg=0,imgfile=
 
 
     #m.plot(x,y,'o',markeredgewidth=0.1)
-    import dclimate as dclim
+    import pkgs.dclimate as dclim
 
     if b_cnfont :
 
@@ -277,7 +277,6 @@ def Draw_China_Map(Region,title1,levfile='',b_showimg=0,imgfile='tmp1.png',b_sho
     #if(3==shapeR[1]):
     x,y,z = Region[:,0],Region[:,1],Region[:,2]
 
-
     #
     xmin,xmax,ymin,ymax = 73.6,134.7,16.2,54.0
     #xmin,xmax,ymin,ymax = 100.0,134.7,16.2,30.0
@@ -289,20 +288,20 @@ def Draw_China_Map(Region,title1,levfile='',b_showimg=0,imgfile='tmp1.png',b_sho
     print(x1.shape,y1.shape)
 
     #离散点插值到网格
-    mytic()
-    if np.size(x)>350 :
-        #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='Invdisttree')#Invdisttree
-        zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='griddata')#Invdisttree
-    else:
-        zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='Invdisttree')#Invdisttree
-        #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='griddata')#Invdisttree
-        #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='nearest')#Invdisttree
-    mytoc(u'离散点插值到网格')
-    #重要
+    # mytic()
+    # if np.size(x)>350 :
+    #     #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='Invdisttree')#Invdisttree
+    #     zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='griddata')#Invdisttree
+    # else:
+    #     zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='Invdisttree')#Invdisttree
+    #     #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='griddata')#Invdisttree
+    #     #zi,xi,yi = dgrid.griddata_all(x,y,z,x1,y1,func='nearest')#Invdisttree
+    # mytoc(u'离散点插值到网格')
+    # #重要
 
     #平滑插值
 
-    if(1):
+    if(0):
         mytic()
         zi,xi,yi,x1,y1,nx,ny=dgrid.extened_grid(zi,x1,y1,zoom=6)
         #print(zi.ravel())
@@ -312,12 +311,12 @@ def Draw_China_Map(Region,title1,levfile='',b_showimg=0,imgfile='tmp1.png',b_sho
 
     #获取mask矩阵
 
-    mytic()
-    grid1 = dgrid.build_inside_mask_array( \
-        os.path.join(Spatial_Data,r"china_province"),x1,y1) #shapes
-    #grid1,shapes = dgrid.build_inside_mask_array(r"spatialdat\CJ_BOUND",x1,y1)
-    mytoc(u'mask非绘图区域')
-    zi[np.logical_not(grid1)]=np.NaN
+    # mytic()
+    # grid1 = dgrid.build_inside_mask_array( \
+    #     os.path.join(Spatial_Data,r"china_province"),x1,y1) #shapes
+    # grid1,shapes = dgrid.build_inside_mask_array(r"spatialdat\CJ_BOUND",x1,y1)
+    # mytoc(u'mask非绘图区域')
+    # zi[np.logical_not(grid1)]=np.NaN
 
     #-----------------------------------------------------------------------------------
     fig = plt.figure(figsize=(12, 9), dpi=100)
@@ -356,7 +355,7 @@ def Draw_China_Map(Region,title1,levfile='',b_showimg=0,imgfile='tmp1.png',b_sho
     dgrid.draw_map_lines(m,os.path.join(Spatial_Data,"CJ_LVL1_RIVER"),color='b',linewidth=1.0)
     mytoc(u'画长江干流: ')
     mytic()
-
+    plt.show()
     #mytic()
     #dgrid.draw_map_lines(m,r"spatialdat\CJ_BOUND",color='k',linewidth=1.0)
     #dgrid.draw_map_lines(m,r"spatialdat\CJ_BOUND",color='g',linewidth=0.50)

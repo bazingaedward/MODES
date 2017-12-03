@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 """
 author: 邱凯翔<kxqiu@chinkun.cn>
-latest: 2016.08.06
-description: GridPlot.py专门绘制网格格点图,并叠加地图信息
+latest: 2016.08.17
+description: typhoon.py 台风数据处理及预测
 """
 from __future__ import print_function
 from sys import exit
@@ -15,15 +15,19 @@ import pandas as pd
 from sklearn import metrics
 import tempfile as tf
 import numpy as np
+import stormtracks as st
 
 
-class GridPlot(Argument, Settings):
-    """ROC绘图"""
+class Typhoon(Argument, Settings):
+    """台风预测"""
     parameters = dict()
     # 命令行参数,参考 https://docs.python.org/2/howto/argparse.html
     command_args = [
-        [('npy',), {'help': u'指定一个csv2npy后生成的.npy文件', 'type': str, 'nargs': 1}],
-        [('-n','--name',), {'help': u'输出结果文件名', 'type': str, 'nargs': 1}],
+        # [('npy',), {'help': u'指定一个csv2npy后生成的.npy文件', 'type': str, 'nargs': 1}],
+        [('-d','--download',), {'help': u'下载台风资料', 'choices':['C20','IBTRACKS']}],
+        [('-p','--path',), {'help': u'设置下载路径,默认为当前路径', 'type':str, 'nargs':1}],
+
+        [('type',), {'help': u'', 'choices':['download','analysis','utils'], 'nargs': 1}],
         [('-t','--title',), {'help': 'plot image title', 'type': str, 'nargs': 1}],
         [('-v','--verbose',), {'help': u'输出详细信息', 'action':"store_true"}]
     ]
@@ -52,25 +56,9 @@ class GridPlot(Argument, Settings):
 
     def process(self):
         """ process """
-        ##load data
-        data = np.load(self.parameters['npy'])
-        ##create basemap
-        self.bm = Basemap(projection='cyl',resolution='l',lon_0=120)
-        self.bm.drawcoastlines(linewidth=0.25)
-        self.bm.drawcountries(linewidth=0.25)
-        #self.bm.fillcontinents(color='grey')
+        pass
 
-        lons,lats = self.bm.makegrid(360,181)
-        x,y = self.bm(lons,lats)
-        self.bm.contourf(x,y,data)
-        ##add colorbar
-        self.bm.colorbar(location='bottom',size='5%',label="mm")
-        ##add plot title
-        plt.title(self.parameters['title'])
-
-        ##save plot
-        plt.savefig(self.parameters['name'])
 
 
 if __name__ == '__main__':
-    temp = GridPlot()
+    temp = Typhoon()

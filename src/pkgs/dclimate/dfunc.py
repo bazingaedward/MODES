@@ -1171,9 +1171,10 @@ def load_obj_blosc(FileName='temp.npz'):
     file_str=file2.read()
     file2.close()
     import blosc
-    a=blosc.unpack_array(file_str)
+    a = blosc.unpack_array(file_str)
     object1 = a[0]['cdiag1']
     return object1
+
 #------------------------------------------------------------------------------
 def save_obj_zlib(object1,FileName='temp.npz'):
     '''

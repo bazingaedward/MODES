@@ -55,13 +55,7 @@ class ROC(Argument, Settings):
         bs = dict() #Brier Score Loss
         # turn off the interactive mode
         plt.clf()
-        total = 0
-        one = 0
-        for item in self.y_true.ix[:, self.parameters['index']]:
-            if item == 0.0:
-                one +=1
-            total +=1
-        print(one,total)
+
         fpr[self.parameters['index']], tpr[self.parameters['index']], _ = metrics.roc_curve(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
         roc_auc[self.parameters['index']] = metrics.roc_auc_score(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])
         bs[self.parameters['index']] = metrics.brier_score_loss(self.y_true.ix[:, self.parameters['index']], self.y_score.ix[:, self.parameters['index']])

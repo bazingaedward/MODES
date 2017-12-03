@@ -72,7 +72,7 @@ class Serialization(Argument, Settings):
         # 观测数据
         obs = netCDF4.Dataset(self.parameters['obs'], 'r')
         self.Time_obs = obs.variables['time'][:]
-        self.Data_obs = obs.variables['obpre'][:]
+        self.Data_obs = obs.variables['obcat'][:]
         # 数据匹配
         self.startTime = dt.datetime.strptime(
             str(self.Time_obs[0]), '%Y%m')  # 顺序排列的观测数据起始月份
@@ -105,7 +105,10 @@ class Serialization(Argument, Settings):
                 for lon in range(self.grid['lon']):
                     list_pre = self.calProb(self.Data_pre[idx, :, lat, lon])
                     list_obs = self.calObs(self.Data_obs[diffMonth, lat, lon])
-                    # 结果保存
+                    ## 检查list_obs结果
+                    if not list_obs:
+                        continue
+                    ## 结果保存
                     df = pd.DataFrame(
                         [list(list_pre) + list_obs + [lat, lon]],
                         columns=self.columns)
@@ -134,7 +137,10 @@ class Serialization(Argument, Settings):
                 for lon in range(self.grid['lon']):
                     list_pre = self.calProb(self.Data_pre[idx, :, lat, lon])
                     list_obs = self.calObs(self.Data_obs[diffMonth, lat, lon])
-                    # 结果保存
+                    ## 检查list_obs结果
+                    if not list_obs:
+                        continue
+                    ## 结果保存
                     df = pd.DataFrame(
                         [list(list_pre) + list_obs + [lat, lon]],
                         columns=self.columns)
@@ -164,12 +170,14 @@ class Serialization(Argument, Settings):
 
     def calObs(self, data):
         """ 观测结果 """
-        if data == -1:
+        if data == 0:
             return [1, 0, 0]
-        elif data == 0:
-            return [1, 0, 0]
-        else:
+        elif data == 1:
+            return [0, 1, 0]
+        elif data == 2:
             return [0, 0, 1]
+        else:
+            return False
 
 
 if __name__ == '__main__':
